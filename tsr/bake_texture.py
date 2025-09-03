@@ -25,7 +25,7 @@ def make_atlas(mesh, texture_resolution, texture_padding):
 def rasterize_position_atlas(
     mesh, atlas_vmapping, atlas_indices, atlas_uvs, texture_resolution, texture_padding
 ):
-    ctx = moderngl.create_context(standalone=True)
+    ctx = moderngl.create_context(standalone=True, backend="egl")
     basic_prog = ctx.program(
         vertex_shader="""
             #version 330

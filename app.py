@@ -91,3 +91,8 @@ async def reconstruct(
         return JSONResponse({"error": f"Fallo en run.py: {str(e)}"}, status_code=500)
     except Exception as e:
         return JSONResponse({"error": str(e)}, status_code=500)
+    
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("app:app", host="0.0.0.0", port=8080)
