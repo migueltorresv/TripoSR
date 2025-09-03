@@ -35,6 +35,9 @@ RUN pip install --no-cache-dir numpy \
 # Instalar el resto de dependencias
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Descargar modelo de rembg al construir la imagen
+RUN python -c "import rembg; rembg.new_session()"
+
 COPY . .
 
 EXPOSE 8080
