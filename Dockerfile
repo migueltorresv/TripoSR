@@ -35,6 +35,9 @@ RUN pip install --no-cache-dir numpy \
 # Instalar el resto de dependencias
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Añade al Dockerfile, después de instalar requirements
+RUN python -c "from tsr.system import TSR; TSR.from_pretrained('stabilityai/TripoSR', config_name='config.yaml', weight_name='model.ckpt')"
+
 # Descargar modelo de rembg al construir la imagen
 RUN python -c "import rembg; rembg.new_session()"
 
