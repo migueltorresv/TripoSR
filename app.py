@@ -2,6 +2,8 @@
 from fastapi import FastAPI, UploadFile, File
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import PlainTextResponse
+from starlette.responses import FileResponse
 from fastapi import Request
 import subprocess
 import uuid
@@ -13,11 +15,28 @@ app = FastAPI()
 
 # Carpeta global para outputs
 os.makedirs("outputs", exist_ok=True)
-app.mount("/static", StaticFiles(directory="outputs"), name="static")
+app.mount("/static", StaticFiles(directory="outputs", html=True), name="static")
 
 # Carpeta fija para el "último" modelo generado
 FIXED_OUTPUT_DIR = os.path.join("outputs", "current")
 os.makedirs(FIXED_OUTPUT_DIR, exist_ok=True)
+
+@app.get("/favicon.ico")
+async def favicon():
+    # devolvemos vacío para que no moleste
+    return PlainTextResponse("", status_code=204)
+
+@app.get("/static/{path:path}")
+async def static_no_cache(path: str):
+    full_path = os.path.join("outputs", path)
+    return FileResponse(
+        full_path,
+        headers={
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+            "Pragma": "no-cache",
+            "Expires": "0"
+        }
+    )
 
 @app.post("/reconstruct")
 async def reconstruct(
